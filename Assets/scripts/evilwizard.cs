@@ -8,7 +8,6 @@ public class evilwizard : MonoBehaviour
 {
     public GameObject gameovertext;
     public bool gameover = false;
-    public float scrollspeed = -1.5f;
 
     public TextMeshProUGUI scoretext;
 

@@ -5,6 +5,7 @@ using UnityEngine;
 public class bird : MonoBehaviour
 {
     public float upforce = 200.0f;
+    public int turthealth = 3;
     private bool isdead = false;
     private Animator anim;
     public ParticleSystem psys;
@@ -24,7 +25,7 @@ public class bird : MonoBehaviour
     {
         if(!isdead)
         {
-            if(Input.GetMouseButtonDown(0))
+            if(Input.GetButtonDown("Flap"))
             {
                 rb.velocity = Vector2.zero;
                 anim.SetTrigger("Flap");
@@ -35,12 +36,28 @@ public class bird : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        sources[0].Stop();
-        sources[1].PlayOneShot(sources[1].clip);
-        rb.velocity = Vector2.zero;
-        evilwizard.instance.BirdDied();
-        srenderer.enabled = false;
-        psys.Play();
-        isdead = true;
+        if(turthealth <= 0)
+        {
+            sources[0].Stop();
+            sources[1].PlayOneShot(sources[1].clip);
+            rb.velocity = Vector2.zero;
+            evilwizard.instance.BirdDied();
+            srenderer.enabled = false;
+            psys.Play();
+            isdead = true;
+        }else{
+            turthealth--;
+            this.gameObject.GetComponent<Collider2D>().enabled = false;
+            for(int i = 0; i < 3; i++)
+                StartCoroutine("FlashyFlashy");
+            this.gameObject.GetComponent<Collider2D>().enabled = true;
+        }
+    }
+
+    IEnumerator FlashyFlashy()
+    {
+        srenderer.color = Color.red;
+        yield return new WaitForSeconds(.2f);
+        srenderer.color = Color.white;
     }
 }
